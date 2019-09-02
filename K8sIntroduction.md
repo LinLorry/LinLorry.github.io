@@ -136,6 +136,7 @@ spec:
 `PodSpec`是Pod的`spec`字段类型，其中的字段较多，这里只介绍其中的重点字段`containers`，它属于`Container array`类型，其他的字段详见[PodSpec v1 官方文档](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.15/#podspec-v1-core)
 
 以下Container的重点描述字段
+
 字段                          | 描述
 :---------------------------- | :---
 `args`<br>string array        | 命令行参数
