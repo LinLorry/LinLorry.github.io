@@ -1,0 +1,174 @@
+# OpenSSL生成PKCS#8格式的RSA私钥
+
+最近因为写一个包，因为需求，写了Java和C++两个版本。
+
+而这中间因为使用OpenSSL的RSA加密，遇到了一个问题，花费了一些时间。
+
+一方面方便之后的自己，另一方面因为当时网上一直没找到想要的答案，所以这里也给别人提供一种思路，笔者本人觉得这个答案并不满意，如果之后出现了更好的答案，望通知。
+
+在Jre里RSA私钥的编码和解码一般用的是PKCS#8格式的，而C++的OpenSSL库RSA私钥默认使用的是PKCS#1格式的，两个格式不互通，而我希望使用两个版本的包生成的文件之间可以兼容，这就导致了问题。
+
+当然，如果使用其他的C++库或者Java库可以轻松解决这个问题，但我不希望这个项目的依赖太多，尽量能使用本地一般有的库解决最好。
+
+另一方面因为Java的庞大，我选择让C++版本的适配Java版本，及让C++版本生成PKCS#8格式的密钥，毕竟OpenSSL本身是可以生成PKCS#8格式的，只是使用编码的方式比较麻烦罢了。
+
+使用命令行可以通过keypair生成PKCS#8格式的私钥，而我找到的大部分答案都是这个，具体如下：
+
+``` bash
+# 生成私钥
+openssl genrsa -out key.pem 1024
+# 生成PKCS#8格式的私钥
+openssl pkcs8 -topk8 -in key.pem -out pri.pem -nocrypt
+```
+
+因为网上一直没有找到答案，所以就到OpenSSL的文档里找了很久，尝试了很多方法，最后找到了答案，这里先把答案贴出来，解释在后面。
+
+``` c++
+// 生成RSA密钥对
+int ret = 0;
+RSA *keypair = RSA_new();
+BIGNUM *bne = BN_new();
+ret = BN_set_word(bne, RSA_F4);
+ret = RSA_generate_key_ex(keypair, 4096, bne, nullptr);
+if (ret != 1)
+    std::abort();
+
+// 创建私钥存储空间和空的私钥
+BIO *pri_BIO = BIO_new(BIO_s_mem());
+EVP_PKEY *prikey = EVP_PKEY_new();
+
+// 将私钥以PKCS#1格式写入先前申请的空间pri_BIO内
+PEM_write_bio_RSAPrivateKey(pri_BIO, keypair, nullptr, nullptr, 0, nullptr, nullptr);
+
+// 使用PKCS#1格式的私钥创建私钥prikey
+PEM_read_bio_PrivateKey(pri_BIO, &prikey, nullptr, nullptr);
+
+// 将私钥存储空间清空并重新创建
+BIO_free_all(pri_BIO);
+pri_BIO = BIO_new(BIO_s_mem());
+
+// 将私钥以PKCS#8格式写入新申请的空间pri_BIO内
+PEM_write_bio_PrivateKey(pri_BIO, prikey, nullptr, nullptr, 0, nullptr, nullptr);
+
+// 将私钥prikey释放
+EVP_PKEY_free(prikey);
+```
+
+PKCS#8格式的私钥存储在pri_BIO内，之后只要使用BIO的方法即可处理私钥了，下面是最简单的直接获取字符串的方法：
+
+``` c++
+size_t pri_len =BIO_pending(pri_BIO);
+char pri_str[pri_len];
+BIO_read(pri_BIO, pri_str, pri_len);
+```
+
+---
+
+## 解释
+
+在解释之前，需要弄清楚几个概念：
+
+- [PKCS#1](#PKCS#1)
+- [PKCS#8](#PKCS#8)
+
+笔者本人对这些标准也不是特别清楚，仅仅只是可以辨识，如有需要，可以去查阅更专业的介绍，但对于本文，能过辨识这两个标准就足够了。
+
+### PKCS#1
+
+该格式开头和结尾一般为
+```
+-----BEGIN RSA PRIVATE KEY-----
+...
+-----END RSA PRIVATE KEY-----
+```
+
+### PKCS#8
+
+该格式开头和结尾一般为
+```
+-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----
+```
+
+---
+
+弄清楚这两个编码的区别后，即可正式开始了
+
+- [PEM_write_bio_RSAPrivateKey](#PEM_write_bio_RSAPrivateKey)
+- [PEM_read_bio_PrivateKey](#PEM_read_bio_PrivateKey)
+- [PEM_write_bio_PrivateKey](#PEM_write_bio_PrivateKey)
+- [总结](#总结)
+
+### PEM_write_bio_RSAPrivateKey
+
+OpenSSL从RSA密钥对获取私钥并写入(write)BIO内的函数：
+``` c++
+int PEM_write_bio_RSAPrivateKey(BIO *bp, RSA *x, const EVP_CIPHER *enc,
+                                    unsigned char *kstr, int klen,
+                                    pem_password_cb *cb, void *u);
+```
+OpenSSL文档原文
+
+> The PrivateKey functions read or write a private key in PEM format using an EVP_PKEY structure. The write routines use "traditional" private key format and can handle both RSA and DSA private keys. The read functions can additionally transparently handle PKCS#8 format encrypted and unencrypted keys too.
+
+> The RSAPrivateKey functions process an RSA private key using an RSA structure. It handles the same formats as the PrivateKey functions but an error occurs if the private key is not RSA.
+
+这个函数可以将参数中的RSA结构体x内的私钥写入参数bp内，以默认的PKCS#1格式
+
+通过这个方式，我们将私钥提取出来，并存放在了BIO内。
+
+### PEM_read_bio_PrivateKey
+
+OpenSSL从BIO内读取(read)私钥，创建私钥EVP_PKEY结构体的函数：
+
+``` c++
+EVP_PKEY *PEM_read_bio_PrivateKey(BIO *bp, EVP_PKEY **x,
+                                    pem_password_cb *cb, void *u);
+```
+
+该函数可以帮助我们生成中间物EVP_PKEY结构体。
+
+### PEM_write_bio_PrivateKey
+
+OpenSSL将EVP_PKEY结构体编码写入(write)BIO的函数：
+
+``` c++
+int PEM_write_bio_PrivateKey(BIO *bp, const EVP_PKEY *x, const EVP_CIPHER *enc,
+                                unsigned char *kstr, int klen,
+                                pem_password_cb *cb, void *u);
+```
+
+该函数默认使用PKCS#8格式编码，所以可以将私钥结构体EVP_PKEY编码为PKCS#8并写入BIO内，获取我们最终需要的结果。
+
+### 总结
+
+最后，其实我们可以看到，这个过程其实和使用命令行的方法是差不多的，都是先生成PKCS#1格式的私钥，再将其转化为PKCS#8格式的私钥。这不禁让人怀疑OpenSSL本身确实没有直接通过RSA结构体生成PKCS#8格式的私钥的接口，而不是笔者实力不足或看漏了什么文档。
+
+OpenSSL文档内确实有一些关于PKCS#8的函数，例如
+
+- `PEM_write_bio_PKCS8PrivateKey`
+- `PEM_write_PKCS8PrivateKey`
+- `PEM_write_bio_PKCS8PrivateKey_nid`
+- `PEM_write_PKCS8PrivateKey_nid`
+
+但他们都不接受RSA结构体作为参数，仅接受EVP_PKEY结构体。
+
+所以，笔者的开头所说的该解决方法的缺点就显而易见了，无法一步到位，增加了两次的IO量，并且不够代码美观。
+
+---
+
+## 关于公钥
+
+java使用的是X509格式编码的，而OpenSSL默认也不是该编码的，但是不像私钥，公钥可以一步到位，使用`i2d_RSA_PUBKEY`函数即可。
+
+``` c++
+size_t pub_len = i2d_RSA_PUBKEY(keypair, nullptr);
+char pub_str[pub_len];
+char *pub_p = pub_str;
+i2d_RSA_PUBKEY(keypair, &pub_p);
+```
+
+---
+
+因为笔者能力有些，无法做到面面俱到，如有错误，还望海涵。
