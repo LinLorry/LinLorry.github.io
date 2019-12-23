@@ -1,4 +1,4 @@
-## Kubernetes 介绍和简单使用
+## <img src="https://kubernetes.io/images/favicon.png" width="25px"> Kubernetes 介绍和简单使用
 
 ### 介绍
 
@@ -9,6 +9,8 @@ Kubernetes（K8s）按照官方的介绍是
 即一个拥有自动部署、云和管理容器的一个开源应用。
 
 它拥有很多功能，均衡负载、集群管理、容器健康检测、自动停止或回滚容器、安全配置管理等等。
+
+![](/images/components-of-kubernetes.png)
 
 ### 学习使用之前
 
