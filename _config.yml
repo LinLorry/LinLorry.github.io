@@ -1,3 +1,23 @@
-theme: jekyll-theme-minimal
 title: LinLorry Blog
 description: 记录点东西，避免我忘了
+email: LinLorry.p@gmail.com
+twitter_username: LinLorry
+github_username: LinLorry
+
+# Build settings
+theme: minima
+plugins:
+  - jekyll-feed
+
+exclude:
+  - README.md
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
