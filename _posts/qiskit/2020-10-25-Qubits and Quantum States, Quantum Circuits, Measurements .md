@@ -25,7 +25,7 @@ category: qiskit
 
 - classical states for computation are either "0" or "1"
 
-- in quantum mechaincs, a state can be in _superposition_ (simultaneously in zero and one)
+- in quantum mechaincs, a state can be in **superposition** (simultaneously in zero and one)
 
   -> superposition allow to perform calcuation on many states at the same time.
 
@@ -82,7 +82,7 @@ category: qiskit
 
 - there are infinitely many different basism, but other common ones are {$\vert + \rangle := \frac{1}{\sqrt 2}\cdot(\vert 0 \rangle + \vert 1 \rangle), \vert - \rangle := \frac{1}{\sqrt 2}\cdot(\vert 0 \rangle - \vert 1 \rangle)$} and {$\vert +i \rangle := \frac{1}{\sqrt 2}\cdot(\vert 0 \rangle + i\vert 1 \rangle), \vert -i \rangle := \frac{1}{\sqrt 2}\cdot(\vert 0 \rangle - i\vert 1 \rangle)$} correspond to eigenstates of $\sigma_x$ and $\sigma_y$, respectively
 
-- Born rule: the probobility that a state $\vert \psi \rangle$ collapse during a projective measurement onto the basis {$\vert x \rangle$, $\vert x^+ \rangle$}, to the state $\vert x \rangle$ is given by $P(x) = {\|\langle x \vert \psi \rangle \|}^2, \sum{P(x)} = 1$
+- **Born rule**: the probobility that a state $\vert \psi \rangle$ collapse during a projective measurement onto the basis {$\vert x \rangle$, $\vert x^+ \rangle$}, to the state $\vert x \rangle$ is given by $P(x) = {\|\langle x \vert \psi \rangle \|}^2, \sum{P(x)} = 1$
 
 - examples:
 
@@ -96,11 +96,75 @@ category: qiskit
 
     -> $P(+) = {\| \langle + \vert \psi \rangle \|}^2 = {\|\frac{1}{\sqrt 2}(\langle 0 \vert + \langle 1 \vert ) \cdot \frac {1}{\sqrt 2} \cdot ( \vert 0 \rangle - \vert 1 \rangle )\|}^2 = 0$
 
-#### Bloch sphere
+#### Bloch sphere(布洛赫球面)
 
-// To be continue
+We can write any normalized(pure) quantum state as $\vert \psi \rangle = cos\vert 0 \rangle + e^{i\psi}\sin{\frac{\theta}{2}} \vert 1 \rangle$, where $\varphi \in [0, 2\pi]$ describe the relative phase and $\theta \in [0, \pi]$ determines the probobility to measure $\vert 0 \rangle / \vert 1 \rangle$: $P(\vert 0 \rangle) = \{cos{\frac{\theta}{2}}}^2, p(\vert 1 \rangle) = {\sin{\frac{\theta}{2}}}^2$
 
+=> all normalized pure states can be illustrated on the surface of a sphere with radius $\vert \vec r \vert = 1$, which we call the **Bloch sphere**
+
+=> the coordinates of such a state are given by the **Bloch vector**:
+
+$$
+\vec r = \begin{pmatrix}
+\sin{\theta} \cos{\varphi} \\
+\sin{\theta} \sin{\varphi} \\
+\cos{\theta}
+\end{pmatrix}
+$$
+
+examples:
+
+- $\vert 0 \rangle: \quad \theta = 0, \varphi \quad arbi \rightarrow$
+  $$
+    \vec r = \begin{pmatrix}
+    0 \\
+    0 \\
+    1
+    \end{pmatrix}
+  $$
+- $\vert 1 \rangle: \quad \theta = \pi, \varphi \quad arbi \rightarrow$
+  $$
+    \vec r = \begin{pmatrix}
+    0 \\
+    0 \\
+    -1
+    \end{pmatrix}
+  $$
+- $\vert + \rangle: \quad \theta = \frac{\pi}{2}, \varphi = 0 \rightarrow$
+  $$
+    \vec r = \begin{pmatrix}
+    1 \\
+    0 \\
+    0
+    \end{pmatrix}
+  $$
+- $\vert - \rangle: \quad \theta = \frac{\pi}{2}, \varphi = \pi \rightarrow$
+  $$
+    \vec r = \begin{pmatrix}
+    -1 \\
+    0 \\
+    0
+    \end{pmatrix}
+  $$
+- $\vert +i \rangle: \quad \theta = \frac{\pi}{2}, \varphi = \frac{\pi}{2} \rightarrow$
+  $$
+    \vec r = \begin{pmatrix}
+    0 \\
+    1 \\
+    0
+    \end{pmatrix}
+  $$
+- $\vert -i \rangle: \quad \theta = \frac{\pi}{2}, \varphi = \frac{3\pi}{2} \rightarrow$
+  $$
+    \vec r = \begin{pmatrix}
+    0 \\
+    0 \\
+    1
+    \end{pmatrix}
+  $$
 
 ### References
 
 [Qiskit lecture Note: Qubits and Quantum States, Quantum Circuits, Measurements](https://github.com/qiskit-community/intro-to-quantum-computing-and-quantum-hardware/blob/master/lectures/introqcqh-lecture-notes-1.pdf?raw=true)
+
+[Qiskit Learn lecture](https://qiskit.org/learn/intro-qc-qh/)
