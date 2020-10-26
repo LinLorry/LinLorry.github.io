@@ -12,16 +12,11 @@ category: qiskit
       processEscapes: true,
       skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
     }
-    //,
-    //displayAlign: "left",
-    //displayIndent: "2em"
   });
 </script>
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
 
-### Qubits and Quantum States
-
-#### Form bits to qubits
+### Form bits to qubits
 
 - classical states for computation are either "0" or "1"
 
@@ -35,7 +30,7 @@ category: qiskit
 
   -> it is not that easy to design quantum algorithmsm, but we can use interference effects ("wrong answers" cancled each other out, while the "right answer" remains)
 
-#### Dirac notation(狄拉克符号)
+### Dirac notation(狄拉克符号)
 
 - used to describe quantum states
 
@@ -74,7 +69,7 @@ category: qiskit
   \vert \psi \rangle=\frac{1}{\sqrt 2}\cdot(\vert 0 \rangle + \vert 1 \rangle)=\begin{pmatrix}\frac{1}{\sqrt 2} \\ \frac{1}{\sqrt 2} \end{pmatrix}
   $$
 
-#### Measurement
+### Measurement
 
 - we choose orthogonal bases to descrive and measure aquantum states
 
@@ -96,7 +91,7 @@ category: qiskit
 
     -> $P(+) = {\| \langle + \vert \psi \rangle \|}^2 = {\|\frac{1}{\sqrt 2}(\langle 0 \vert + \langle 1 \vert ) \cdot \frac {1}{\sqrt 2} \cdot ( \vert 0 \rangle - \vert 1 \rangle )\|}^2 = 0$
 
-#### Bloch sphere(布洛赫球面)
+### Bloch sphere(布洛赫球面)
 
 We can write any normalized(pure) quantum state as $\vert \psi \rangle = cos\vert 0 \rangle + e^{i\psi}\sin{\frac{\theta}{2}} \vert 1 \rangle$, where $\varphi \in [0, 2\pi]$ describe the relative phase and $\theta \in [0, \pi]$ determines the probobility to measure $\vert 0 \rangle / \vert 1 \rangle$: $P(\vert 0 \rangle) = \{cos{\frac{\theta}{2}}}^2, p(\vert 1 \rangle) = {\sin{\frac{\theta}{2}}}^2$
 
@@ -113,6 +108,8 @@ $$
 $$
 
 examples:
+
+![](/assets/img/qiskit/Bloch sphere.png)
 
 - $\vert 0 \rangle: \quad \theta = 0, \varphi \quad arbi \rightarrow$
   $$
@@ -162,6 +159,8 @@ examples:
     1
     \end{pmatrix}
   $$
+
+---
 
 ### References
 
