@@ -109,7 +109,7 @@ $$
 
 examples:
 
-![](/assets/img/qiskit/Bloch sphere.png)
+![](/assets/img/qiskit/bloch_sphere.png)
 
 - $\vert 0 \rangle: \quad \theta = 0, \varphi \quad arbi \rightarrow$
   $$
