@@ -93,7 +93,7 @@ category: qiskit
 
 ### Bloch sphere(布洛赫球面)
 
-We can write any normalized(pure) quantum state as $\vert \psi \rangle = cos\vert 0 \rangle + e^{i\psi}\sin{\frac{\theta}{2}} \vert 1 \rangle$, where $\varphi \in [0, 2\pi]$ describe the relative phase and $\theta \in [0, \pi]$ determines the probobility to measure $\vert 0 \rangle / \vert 1 \rangle$: $P(\vert 0 \rangle) = \{cos{\frac{\theta}{2}}}^2, p(\vert 1 \rangle) = {\sin{\frac{\theta}{2}}}^2$
+We can write any normalized(pure) quantum state as $\vert \psi \rangle = cos{\frac{\theta}{2}}\vert 0 \rangle + e^{i\varphi}\sin{\frac{\theta}{2}} \vert 1 \rangle$, where $\varphi \in [0, 2\pi]$ describe the relative phase and $\theta \in [0, \pi]$ determines the probobility to measure $\vert 0 \rangle / \vert 1 \rangle$: $P(\vert 0 \rangle) = \{cos{\frac{\theta}{2}}}^2, P(\vert 1 \rangle) = {\sin{\frac{\theta}{2}}}^2$
 
 => all normalized pure states can be illustrated on the surface of a sphere with radius $\vert \vec r \vert = 1$, which we call the **Bloch sphere**
 
