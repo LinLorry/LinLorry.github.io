@@ -102,7 +102,7 @@ $$
 - $$
   \sigma_y =
   \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix} =
-  i \cdot \sigma_y \cdot \sigma_y
+  i \cdot \sigma_z \cdot \sigma_x
   $$
   => bit & phase flip
 
